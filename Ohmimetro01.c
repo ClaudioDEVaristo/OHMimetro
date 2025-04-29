@@ -12,19 +12,11 @@
 #define I2C_SCL 15
 #define endereco 0x3C
 #define ADC_PIN 28
-#define Botao_A 5
 
 int R_conhecido = 10000;   
 float R_x = 0.0;           
 float ADC_VREF = 3.31;     
 int ADC_RESOLUTION = 4095; 
-
-#include "pico/bootrom.h"
-#define botaoB 6
-void gpio_irq_handler(uint gpio, uint32_t events)
-{
-  reset_usb_boot(0, 0);
-}
 
 // Função para aproximar o valor para uma resistência comercial (série E12)
 float aproximar_resistencia(float resistencia) {
@@ -94,14 +86,6 @@ void resistor_to_color_code(float resistencia, char *banda1, char *banda2, char 
 
 int main()
 {
-  gpio_init(botaoB);
-  gpio_set_dir(botaoB, GPIO_IN);
-  gpio_pull_up(botaoB);
-  gpio_set_irq_enabled_with_callback(botaoB, GPIO_IRQ_EDGE_FALL, true, &gpio_irq_handler);
-
-  gpio_init(Botao_A);
-  gpio_set_dir(Botao_A, GPIO_IN);
-  gpio_pull_up(Botao_A);
 
   i2c_init(I2C_PORT, 400 * 1000);
   gpio_set_function(I2C_SDA, GPIO_FUNC_I2C);
